@@ -17,7 +17,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class VerificationToken extends BaseEntity {
     private String token;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private User user;
     private Instant expiryDate;
 }
