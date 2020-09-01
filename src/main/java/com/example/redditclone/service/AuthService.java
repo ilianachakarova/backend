@@ -1,5 +1,7 @@
 package com.example.redditclone.service;
 
+import com.example.redditclone.dto.AuthenticationResponse;
+import com.example.redditclone.dto.LoginRequest;
 import com.example.redditclone.dto.RegisterRequest;
 import com.example.redditclone.exceptions.SpringRedditException;
 import com.example.redditclone.model.NotificationEmail;
@@ -7,11 +9,20 @@ import com.example.redditclone.model.User;
 import com.example.redditclone.model.VerificationToken;
 import com.example.redditclone.repository.UserRepository;
 import com.example.redditclone.repository.VerificationTokenRepository;
+import com.example.redditclone.security.JWTProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,12 +34,18 @@ public class AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JWTProvider jwtProvider;
+    private final UserServiceImpl userService;
     @Autowired
-    public AuthService(BCryptPasswordEncoder encoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService) {
+    public AuthService(BCryptPasswordEncoder encoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService, AuthenticationManager authenticationManager, JWTProvider jwtProvider, UserServiceImpl userService) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
+        this.authenticationManager = authenticationManager;
+        this.jwtProvider = jwtProvider;
+        this.userService = userService;
     }
     @Transactional
     public void signup(RegisterRequest registerRequest){
@@ -75,4 +92,13 @@ public class AuthService {
         this.userRepository.save(user);
     }
 
+    public AuthenticationResponse login(LoginRequest loginRequest) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+        Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(),loginRequest.getPassword()
+        ));
+        UserDetails userDetails = this.userService.loadUserByUsername(loginRequest.getUsername());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtProvider.generateToken(userDetails);
+        return new AuthenticationResponse(token,loginRequest.getUsername());
+    }
 }
