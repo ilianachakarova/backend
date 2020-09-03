@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +60,7 @@ public class AuthService {
         userRepository.save(user);
 
         String token = generateVerificationToken(user);
+
         mailService.sendMail(new NotificationEmail("Please activate your account", user.getEmail(),
                 "Thank you for signing up for the Reddit-Clone App. " +
         "Please click on the link below to confirm your email. " +
@@ -93,7 +95,8 @@ public class AuthService {
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
-        Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        Authentication authentication = this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),loginRequest.getPassword()
         ));
         UserDetails userDetails = this.userService.loadUserByUsername(loginRequest.getUsername());
@@ -101,4 +104,13 @@ public class AuthService {
         String token = jwtProvider.generateToken(userDetails);
         return new AuthenticationResponse(token,loginRequest.getUsername());
     }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly= true)
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+    }
+
 }

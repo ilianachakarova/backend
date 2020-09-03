@@ -4,12 +4,17 @@ import com.example.redditclone.dto.SubredditDto;
 import com.example.redditclone.exceptions.SpringRedditException;
 import com.example.redditclone.model.Subreddit;
 import com.example.redditclone.repository.SubredditRepository;
+import com.example.redditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -20,13 +25,20 @@ import static java.util.stream.Collectors.toList;
 public class SubredditService {
 
     private final SubredditRepository subredditRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
-    public SubredditDto save(SubredditDto subredditDto) {
-        Subreddit save = subredditRepository.save(this.modelMapper.map(subredditDto,Subreddit.class));
-        subredditDto.setId(save.getId());
-        return subredditDto;
+    public Subreddit save(SubredditDto subredditDto) {
+        Subreddit save = this.modelMapper.map(subredditDto,Subreddit.class);
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        com.example.redditclone.model.User user =
+                this.userRepository.findByUsername(principal.getUsername()).
+                        orElseThrow(()->new UsernameNotFoundException("no such user"));
+        save.setUser(user);
+        save.setCreatedDate(Instant.now());
+        return this.subredditRepository.save(save);
+
     }
 
     @Transactional(readOnly = true)
