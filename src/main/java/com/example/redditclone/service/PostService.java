@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,9 @@ public class PostService {
 
         Post post = this.modelMapper.map(postRequest, Post.class);
         post.setUser(authService.getCurrentUser());
+        post.setSubreddit(subreddit);
+        post.setCreatedDate(Instant.now());
+        this.postRepository.save(post);
     }
 
     @Transactional(readOnly = true)

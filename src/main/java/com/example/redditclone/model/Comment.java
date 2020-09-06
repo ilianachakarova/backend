@@ -20,7 +20,7 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "postId", referencedColumnName = "id")
     private Post post;
     private Instant createdDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 }
