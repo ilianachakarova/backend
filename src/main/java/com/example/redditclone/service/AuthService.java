@@ -2,6 +2,7 @@ package com.example.redditclone.service;
 
 import com.example.redditclone.dto.AuthenticationResponse;
 import com.example.redditclone.dto.LoginRequest;
+import com.example.redditclone.dto.RefreshTokenRequest;
 import com.example.redditclone.dto.RegisterRequest;
 import com.example.redditclone.exceptions.SpringRedditException;
 import com.example.redditclone.model.NotificationEmail;
@@ -10,6 +11,7 @@ import com.example.redditclone.model.VerificationToken;
 import com.example.redditclone.repository.UserRepository;
 import com.example.redditclone.repository.VerificationTokenRepository;
 import com.example.redditclone.security.JWTProvider;
+import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Builder
 public class AuthService {
 
     private final BCryptPasswordEncoder encoder;
@@ -38,8 +41,10 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JWTProvider jwtProvider;
     private final UserServiceImpl userService;
+    private final RefreshTokenService refreshTokenService;
+
     @Autowired
-    public AuthService(BCryptPasswordEncoder encoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService, AuthenticationManager authenticationManager, JWTProvider jwtProvider, UserServiceImpl userService) {
+    public AuthService(BCryptPasswordEncoder encoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService, AuthenticationManager authenticationManager, JWTProvider jwtProvider, UserServiceImpl userService, RefreshTokenService refreshTokenService) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
@@ -47,6 +52,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.userService = userService;
+        this.refreshTokenService = refreshTokenService;
     }
     @Transactional
     public void signup(RegisterRequest registerRequest){
@@ -102,7 +108,8 @@ public class AuthService {
         UserDetails userDetails = this.userService.loadUserByUsername(loginRequest.getUsername());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(userDetails);
-        return new AuthenticationResponse(token,loginRequest.getUsername());
+        return new AuthenticationResponse(token,this.refreshTokenService.generateRefreshToken().getToken(),
+                Instant.now().plusMillis(9000),loginRequest.getUsername());
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly= true)
@@ -113,4 +120,11 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
     }
 
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        this.refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = this.jwtProvider.generateTokenWithUsername(refreshTokenRequest.getUsername());
+        return new
+                AuthenticationResponse(token,refreshTokenRequest.getRefreshToken(),
+                Instant.now().plusMillis(9000 * 10 *10),refreshTokenRequest.getUsername());
+    }
 }

@@ -23,8 +23,7 @@ public class CommentsController {
     @GetMapping("/by-post/{postId}")
     public void getAllCommentsForPost(@PathVariable Long postId) {
         ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        this.commentService.getAllCommentsForPost(postId));
+                .body(this.commentService.getAllCommentsForPost(postId));
     }
 
     @GetMapping("/by-user/{userName}")

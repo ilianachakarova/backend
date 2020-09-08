@@ -17,10 +17,10 @@ import javax.validation.constraints.NotNull;
 public class Vote extends BaseEntity{
     private VoteType voteType;
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "postId", referencedColumnName = "id")
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 }
