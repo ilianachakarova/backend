@@ -7,9 +7,7 @@ import com.example.redditclone.exceptions.SubredditNotFoundException;
 import com.example.redditclone.model.Post;
 import com.example.redditclone.model.Subreddit;
 import com.example.redditclone.model.User;
-import com.example.redditclone.repository.PostRepository;
-import com.example.redditclone.repository.SubredditRepository;
-import com.example.redditclone.repository.UserRepository;
+import com.example.redditclone.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -32,6 +30,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final AuthService authService;
     private final ModelMapper modelMapper;
+    private final CommentRepository commentRepository;
 
 
     public void save(PostRequest postRequest) {
@@ -57,6 +56,7 @@ public class PostService {
        return this.postRepository.findAll().stream().map(post->{
             PostResponse postResponse = this.modelMapper.map(post,PostResponse.class);
             postResponse.setUserName(post.getUser().getUsername());
+            postResponse.setCommentCount(this.commentRepository.findByPost(post).size());
             return postResponse;
         }).collect(Collectors.toList());
     }

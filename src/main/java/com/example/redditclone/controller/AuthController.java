@@ -18,6 +18,7 @@ import java.security.UnrecoverableKeyException;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin
 public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
