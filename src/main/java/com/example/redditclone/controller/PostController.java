@@ -15,7 +15,7 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController
 @RequestMapping("/api/posts")
 @AllArgsConstructor
-@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
+//@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
 
 public class PostController {
 
