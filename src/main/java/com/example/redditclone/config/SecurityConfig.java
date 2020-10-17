@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.List;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -28,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JWTProvider jwtProvider;
+
     @Autowired
     public SecurityConfig(@Qualifier("userService") UserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter, JWTProvider jwtProvider) {
         this.userDetailsService = userDetailsService;
@@ -46,16 +48,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.addAllowedOrigin("*");
                 config.setAllowCredentials(true);
+                config.setAllowedHeaders(List.of("Access-Control-Allow-Origin","Authorization", "Cache-Control", "Content-Type"));
                 return config;
             }
         })
 
-                .and()
-                .csrf().and()
+                .and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**")
                 .permitAll()
-                .antMatchers(HttpMethod.OPTIONS,"/**")
+                .antMatchers(HttpMethod.OPTIONS, "/**")
                 .permitAll()
                 .antMatchers(org.springframework.http.HttpMethod.GET, "/api/subreddit")
                 .permitAll()
@@ -91,12 +93,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BCryptPasswordEncoder encoder(){
+    public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public ModelMapper modelMapper(){
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 
