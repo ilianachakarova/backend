@@ -15,7 +15,8 @@ import java.util.List;
 @RequestMapping("/api/subreddit")
 @AllArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
+
 public class SubredditController {
 
     private final SubredditService subredditService;

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/votes")
 @AllArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
+
 public class VoteController {
     private final VoteService voteService;
 
