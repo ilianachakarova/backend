@@ -1,5 +1,6 @@
 package com.example.redditclone.service;
 
+import com.example.redditclone.config.AppConfig;
 import com.example.redditclone.dto.AuthenticationResponse;
 import com.example.redditclone.dto.LoginRequest;
 import com.example.redditclone.dto.RefreshTokenRequest;
@@ -42,9 +43,10 @@ public class AuthService {
     private final JWTProvider jwtProvider;
     private final UserServiceImpl userService;
     private final RefreshTokenService refreshTokenService;
+    private final AppConfig appConfig;
 
     @Autowired
-    public AuthService(BCryptPasswordEncoder encoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService, AuthenticationManager authenticationManager, JWTProvider jwtProvider, UserServiceImpl userService, RefreshTokenService refreshTokenService) {
+    public AuthService(BCryptPasswordEncoder encoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService, AuthenticationManager authenticationManager, JWTProvider jwtProvider, UserServiceImpl userService, RefreshTokenService refreshTokenService, AppConfig appConfig) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
@@ -53,6 +55,7 @@ public class AuthService {
         this.jwtProvider = jwtProvider;
         this.userService = userService;
         this.refreshTokenService = refreshTokenService;
+        this.appConfig = appConfig;
     }
     @Transactional
     public void signup(RegisterRequest registerRequest){
@@ -70,7 +73,7 @@ public class AuthService {
         mailService.sendMail(new NotificationEmail("Please activate your account", user.getEmail(),
                 "Thank you for signing up for the Reddit-Clone App. " +
         "Please click on the link below to confirm your email. " +
-        "http://localhost:8000/api/auth/accountVerification/" + token));
+        appConfig.getAppUrl() + "/api/auth/accountVerification/" + token));
     }
 
     private String generateVerificationToken(User user) {

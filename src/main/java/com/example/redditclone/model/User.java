@@ -11,7 +11,7 @@ import java.time.Instant;
 
 @Entity
 @Data
-@Table(name="users")
+@Table(name="reddit_users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
