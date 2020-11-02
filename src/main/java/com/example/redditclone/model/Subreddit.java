@@ -21,6 +21,6 @@ public class Subreddit extends BaseEntity{
     @OneToMany(fetch = FetchType.LAZY)
     private List<Post> posts;
     private Instant createdDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 }

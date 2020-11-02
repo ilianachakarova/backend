@@ -31,7 +31,7 @@ public class DataInit implements CommandLineRunner {
 
     private void init() {
         User user = new User("user","123456","user@gmail.com", Instant.now(),true);
-        this.userRepository.save(user);
+        this.userRepository.saveAndFlush(user);
         Subreddit subreddit = new Subreddit("subreddit","sample",null,Instant.now(),user);
         this.subredditRepository.save(subreddit);
         Post post = new Post("testPost","www.url.com","asd asd asd",5,user,Instant.now(),subreddit);
