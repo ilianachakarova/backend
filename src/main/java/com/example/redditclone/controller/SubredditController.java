@@ -1,7 +1,7 @@
 package com.example.redditclone.controller;
 
 import com.example.redditclone.dto.SubredditDto;
-import com.example.redditclone.model.Subreddit;
+import com.example.redditclone.model.Topic;
 import com.example.redditclone.service.SubredditService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class SubredditController {
     private final SubredditService subredditService;
 
     @PostMapping
-    public ResponseEntity<Subreddit> createSubreddit(@RequestBody SubredditDto subredditDto){
+    public ResponseEntity<Topic> createSubreddit(@RequestBody SubredditDto subredditDto){
        return ResponseEntity.status(HttpStatus.CREATED)
                .body(subredditService.save(subredditDto));
     }

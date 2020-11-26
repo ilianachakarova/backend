@@ -2,7 +2,7 @@ package com.example.redditclone.service;
 
 import com.example.redditclone.dto.SubredditDto;
 import com.example.redditclone.exceptions.SpringRedditException;
-import com.example.redditclone.model.Subreddit;
+import com.example.redditclone.model.Topic;
 import com.example.redditclone.repository.SubredditRepository;
 import com.example.redditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -29,8 +29,8 @@ public class SubredditService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public Subreddit save(SubredditDto subredditDto) {
-        Subreddit save = this.modelMapper.map(subredditDto,Subreddit.class);
+    public Topic save(SubredditDto subredditDto) {
+        Topic save = this.modelMapper.map(subredditDto, Topic.class);
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         com.example.redditclone.model.User user =
                 this.userRepository.findByUsername(principal.getUsername()).
@@ -50,13 +50,13 @@ public class SubredditService {
     }
 
     public SubredditDto getSubreddit(Long id) {
-        Subreddit subreddit = subredditRepository.findById(id)
+        Topic topic = subredditRepository.findById(id)
                 .orElseThrow(() -> new SpringRedditException("No subreddit found with ID - " + id));
-        return this.modelMapper.map(subreddit,SubredditDto.class);
+        return this.modelMapper.map(topic,SubredditDto.class);
     }
 
-    private Subreddit mapSubredditDto(SubredditDto subredditDto) {
-        return Subreddit.builder().name(subredditDto.getName())
+    private Topic mapSubredditDto(SubredditDto subredditDto) {
+        return Topic.builder().name(subredditDto.getName())
                 .description(subredditDto.getDescription())
                 .build();
     }

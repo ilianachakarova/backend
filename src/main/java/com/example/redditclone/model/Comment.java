@@ -1,6 +1,7 @@
 package com.example.redditclone.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name="comments")
 public class Comment extends BaseEntity{
     @NotEmpty

@@ -30,4 +30,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
     }
+
+
 }

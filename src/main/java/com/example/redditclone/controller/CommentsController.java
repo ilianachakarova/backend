@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/comments")
 @AllArgsConstructor
-@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
+@CrossOrigin(origins = "*")
 public class CommentsController {
 
     private final CommentService commentService;

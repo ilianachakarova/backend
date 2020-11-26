@@ -28,6 +28,6 @@ public class Post extends BaseEntity{
     private User user;
     private Instant createdDate;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "subreddit_id", referencedColumnName = "id")
-    private Subreddit subreddit;
+    @JoinColumn(name = "topic_id", referencedColumnName = "id")
+    private Topic topic;
 }

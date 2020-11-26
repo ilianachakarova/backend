@@ -18,7 +18,7 @@ import java.security.UnrecoverableKeyException;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
+@CrossOrigin(origins = "*")
 public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;

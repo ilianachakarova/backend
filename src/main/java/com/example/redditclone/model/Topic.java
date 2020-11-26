@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "subreddits")
-public class Subreddit extends BaseEntity{
+@Table(name = "topics")
+public class Topic extends BaseEntity{
     @NotBlank(message = "Community name is required")
     private String name;
     @NotBlank(message = "Description is required")

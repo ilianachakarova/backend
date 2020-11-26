@@ -5,7 +5,7 @@ import com.example.redditclone.dto.PostResponse;
 import com.example.redditclone.exceptions.PostNotFoundException;
 import com.example.redditclone.exceptions.SubredditNotFoundException;
 import com.example.redditclone.model.Post;
-import com.example.redditclone.model.Subreddit;
+import com.example.redditclone.model.Topic;
 import com.example.redditclone.model.User;
 import com.example.redditclone.repository.*;
 import lombok.AllArgsConstructor;
@@ -34,12 +34,12 @@ public class PostService {
 
 
     public void save(PostRequest postRequest) {
-        Subreddit subreddit = this.subredditRepository.findByName(postRequest.getSubredditName())
+        Topic topic = this.subredditRepository.findByName(postRequest.getSubredditName())
                 .orElseThrow(() -> new SubredditNotFoundException(postRequest.getSubredditName()));
 
         Post post = this.modelMapper.map(postRequest, Post.class);
         post.setUser(authService.getCurrentUser());
-        post.setSubreddit(subreddit);
+        post.setTopic(topic);
         post.setCreatedDate(Instant.now());
         this.postRepository.save(post);
     }
