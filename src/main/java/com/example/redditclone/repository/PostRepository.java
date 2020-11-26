@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-    List<Post>findBySubreddit_Id(Long id);
+    List<Post>findByTopic_Id(Long topicId);
     List<Post>findPostsByUser(User user);
 }

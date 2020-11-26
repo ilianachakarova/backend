@@ -73,7 +73,7 @@ public class AuthService {
         mailService.sendMail(new NotificationEmail("Please activate your account", user.getEmail(),
                 "Thank you for signing up for the Reddit-Clone App. " +
         "Please click on the link below to confirm your email. " +
-        appConfig.getAppUrl() + "/api/auth/accountVerification/" + token));
+         "http://localhost:8000/api/auth/accountVerification/" + token));
     }
 
     private String generateVerificationToken(User user) {

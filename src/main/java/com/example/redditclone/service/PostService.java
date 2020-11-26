@@ -62,8 +62,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse>getPostsBySubreddit(Long subredditId){
-      return this.postRepository.findBySubreddit_Id(subredditId).stream()
+    public List<PostResponse>getPostsBySubreddit(Long topicId){
+      return this.postRepository.findByTopic_Id(topicId).stream()
                 .map(post -> {
                     PostResponse postResponse = this.modelMapper.map(post,PostResponse.class);
                     postResponse.setUserName(post.getUser().getUsername());
