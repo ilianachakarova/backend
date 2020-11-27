@@ -1,8 +1,8 @@
 package com.example.redditclone.controller;
 
-import com.example.redditclone.dto.SubredditDto;
+import com.example.redditclone.dto.TopicDto;
 import com.example.redditclone.model.Topic;
-import com.example.redditclone.service.SubredditService;
+import com.example.redditclone.service.TopicService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,32 +12,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/subreddit")
+@RequestMapping("/api/topic")
 @AllArgsConstructor
 @Slf4j
 //@CrossOrigin(origins = "https://angularspringblog.herokuapp.com")
 
-public class SubredditController {
+public class TopicController {
 
-    private final SubredditService subredditService;
+    private final TopicService topicService;
 
     @PostMapping
-    public ResponseEntity<Topic> createSubreddit(@RequestBody SubredditDto subredditDto){
+    public ResponseEntity<Topic> createTopic(@RequestBody TopicDto topicDto){
        return ResponseEntity.status(HttpStatus.CREATED)
-               .body(subredditService.save(subredditDto));
+               .body(topicService.save(topicDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<SubredditDto>>getAllSubreddits(){
+    public ResponseEntity<List<TopicDto>>getAllTopics(){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(subredditService.getAll());
+                .body(topicService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubredditDto>getSubreddit(@PathVariable("id") Long id){
+    public ResponseEntity<TopicDto>getTopic(@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(subredditService.getSubreddit(id));
+                .body(topicService.getTopic(id));
     }
 
 

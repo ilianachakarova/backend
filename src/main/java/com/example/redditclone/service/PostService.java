@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class PostService {
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
+    private final TopicRepository topicRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final ModelMapper modelMapper;
@@ -34,7 +34,7 @@ public class PostService {
 
 
     public void save(PostRequest postRequest) {
-        Topic topic = this.subredditRepository.findByName(postRequest.getSubredditName())
+        Topic topic = this.topicRepository.findByName(postRequest.getSubredditName())
                 .orElseThrow(() -> new SubredditNotFoundException(postRequest.getSubredditName()));
 
         Post post = this.modelMapper.map(postRequest, Post.class);

@@ -1,7 +1,7 @@
 package com.example.redditclone;
 
 import com.example.redditclone.repository.PostRepository;
-import com.example.redditclone.repository.SubredditRepository;
+import com.example.redditclone.repository.TopicRepository;
 import com.example.redditclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataInit implements CommandLineRunner {
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
+    private final TopicRepository topicRepository;
     private final UserRepository userRepository;
     @Autowired
-    public DataInit(PostRepository postRepository, SubredditRepository subredditRepository, UserRepository userRepository) {
+    public DataInit(PostRepository postRepository, TopicRepository topicRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
-        this.subredditRepository = subredditRepository;
+        this.topicRepository = topicRepository;
         this.userRepository = userRepository;
     }
 
